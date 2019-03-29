@@ -7,15 +7,17 @@ close all
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% EDIT HERE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %inputs:
-Rmax=20;
+Rmax=20.5;
 Rmin=3;
 
-Max_iterations=1000; %should be a high value, it won't necessarily reach it 
-delta_t=0.05; %should be a low value, in order to get small steps
+Max_iterations=500;  %should be a high value, it won't necessarily reach it 
+delta_t=0.1;         %should be a low value, in order to get small steps
+threshold_vel=0.0001;%should be a low value, in order to progress in code
+                     %only when the circles in their stability positions
 
-%>>>plot flag<<<:
+%>>>plot flags<<<:
 plot_flag=1;
-
+plot_flag_final_result=1;
 
 %%%%%%%%%%%%%%%%%%%%%%%% MAIN FUNCTIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -28,6 +30,9 @@ end
 
 %output:
 Ncircles=0;
+all_pts=struct;
+all_pts(1).pos=[];  %add aux allocator
+all_pts(1).vel=[];  %add aux allocator
 
 %constants:
 Max_crowns=floor(Rmax/(2.0*Rmin));
@@ -52,6 +57,7 @@ for crown=1:Max_crowns %note:could be while 1
     pts_out=pts_in;
     n_pts_out=n_pts_in;
     Ncircles=Ncircles+n_pts_out;
+    all_pts=[all_pts, pts_out];
     [H,pts_in,n_pts_in]=gen_crown(Rmax-crown*(2*Rmin),Rmin,x_pos,y_pos,pts_out,n_pts_out,plot_flag);
     
     
@@ -68,10 +74,11 @@ for crown=1:Max_crowns %note:could be while 1
         end
         if flag==0
             %it fits, lets finish:
+            Ncircles=Ncircles+1;
+            all_pts(end+1).pos=[0 0];
             if plot_flag
                 H(1).circ=plot(x_pos,y_pos,'b');
-                H_all=[H_all,H];
-                Ncircles=Ncircles+1;
+                H_all=[H_all,H];    
             end
         end
         break;
@@ -125,10 +132,14 @@ for crown=1:Max_crowns %note:could be while 1
 
             if isempty(CM)
                 pts_in(i).pos=pts_in(i).pos + delta_t*vel;
+                pts_in(i).vel=vel;
             else
-                %point stopped moving:
-                count_ok=count_ok+1;
+                if norm(vel-pts_in(i).vel)<threshold_vel
+                    %point stopped moving, stability reached:
+                    count_ok=count_ok+1;
+                end
                 pts_in(i).pos=CM;
+                pts_in(i).vel=vel;
             end
             
             
@@ -158,10 +169,16 @@ for crown=1:Max_crowns %note:could be while 1
     
 end
 
+all_pts(1)=[]; %remove aux allocator
+
 if plot_flag
     title(['Ended! Max circ: ' num2str(Ncircles)]);
 end
 disp(['Ended! Max circ: ' num2str(Ncircles)]);
+
+if plot_flag_final_result
+    plot_result(all_pts,Rmin,Rmax,Ncircles);
+end
 
 %nice exit:
 clear d flag H i n_pts_in n_pts_out plot_flag pts_in pts_out ring x_pos y_pos 
@@ -189,7 +206,7 @@ function [H,pts,n_pts]=setup_crown(Rmax,Rmin,x_pos,y_pos)
     flag=0;
     for i=1:n_pts
         pts(i).pos=(Rmax-Rmin)*[cos((i-1)*theta),sin((i-1)*theta)];
-        
+        pts(i).vel=[0 0];
         
         %check inter collision:
         for j=1:max(size(pts))
@@ -216,6 +233,7 @@ function [H,pts,n_pts]=setup_crown(Rmax,Rmin,x_pos,y_pos)
         d=test_pos-pts(1).pos;
         if d*d'>=(2*Rmin)^2
             pts(2).pos=test_pos;
+            pts(2).vel=[0 0];
             n_pts=n_pts+1;
             if ~isempty(x_pos)
                 H(i).circ=plot(test_pos(1)+x_pos,test_pos(2)+y_pos,'b');
@@ -247,10 +265,27 @@ function [H,pts,n_pts]=gen_crown(Rmax,Rmin,x_pos,y_pos,pts_in,n_pts_in,plot_flag
         
     for i=1:n_pts
         pts(i).pos=(Rot*(Rmax-Rmin)*[cos((i-1)*theta);sin((i-1)*theta)])';
-
+        pts(i).vel=[0 0];
         if plot_flag
             H(i).circ=plot(pts(i).pos(1)+x_pos,pts(i).pos(2)+y_pos,'b');
         end
     end
 
+end
+
+function plot_result(all_pts,Rmin,Rmax,Ncircles)
+    figure(1);
+    hold off
+    x_pos=Rmax*cos(linspace(-pi,pi));
+    y_pos=Rmax*sin(linspace(-pi,pi));
+    plot(x_pos,y_pos,'r');hold on
+    axis square
+    xlim([-Rmax Rmax]);
+    ylim([-Rmax Rmax]);
+    
+    x_pos=Rmin*cos(linspace(-pi,pi));
+    y_pos=Rmin*sin(linspace(-pi,pi));
+    for i=1:Ncircles
+        plot(all_pts(i).pos(1)+x_pos,all_pts(i).pos(2)+y_pos,'b');
+    end
 end
