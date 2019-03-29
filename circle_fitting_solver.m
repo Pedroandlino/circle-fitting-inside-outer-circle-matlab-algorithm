@@ -7,21 +7,20 @@ close all
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%% EDIT HERE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %inputs:
-Rmax=4;
-Rmin=2;
+Rmax=20;
+Rmin=3;
 
 Max_iterations=1000; %should be a high value, it won't necessarily reach it 
-Max_crowns=10; %should be a high value, it won't necessarily reach it 
-delta_t=0.5; %should be a low value, in order to get small steps
+delta_t=0.05; %should be a low value, in order to get small steps
 
 %>>>plot flag<<<:
-plot_flag=0;
+plot_flag=1;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%% MAIN FUNCTIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %protection:
-if Rmax<2*Rmin || Max_iterations<100 || Max_crowns <1 || delta_t>0.5
+if Rmax<2*Rmin || Max_iterations<100 || delta_t>0.5
     disp('Naughty boy!');
     return;
 end
@@ -31,8 +30,7 @@ end
 Ncircles=0;
 
 %constants:
-
-
+Max_crowns=floor(Rmax/(2.0*Rmin));
 if plot_flag
     x_pos=Rmin*cos(linspace(-pi,pi));
     y_pos=Rmin*sin(linspace(-pi,pi));
@@ -184,7 +182,7 @@ function [H,pts,n_pts]=setup_crown(Rmax,Rmin,x_pos,y_pos)
     H=struct;
     pts=struct;
     
-    n_pts=floor(2*pi*(Rmax-Rmin)/(2*Rmin));
+    n_pts=floor(2*pi*(Rmax-Rmin)/(2.0*Rmin));
     
     theta=2*pi/double(n_pts);
     
@@ -240,7 +238,7 @@ function [H,pts,n_pts]=gen_crown(Rmax,Rmin,x_pos,y_pos,pts_in,n_pts_in,plot_flag
         Rot=eye(2);
     end
     
-    n_pts=floor(2*pi*(Rmax-Rmin)/(2*Rmin));
+    n_pts=floor(2*pi*(Rmax-Rmin)/(2.0*Rmin));
     if n_pts<1
         return
     end
