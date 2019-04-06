@@ -191,7 +191,7 @@ for losses=1:n_pts
 
                 %clear outliers
                 if pts(i).pos*pts(i).pos'>(Rnow)^2
-                    pts(i).pos=[100,100];
+                    pts(i).pos=[Inf,Inf];
                     pts(i).vel=[0,0];
                     remove_pts=[remove_pts, i];
                 end 
@@ -248,7 +248,7 @@ for losses=1:n_pts
     pts=pts_ini;
     remove_pts=[];
     for i=1:losses
-        pts(i).pos=[-100 -100];
+        pts(i).pos=[Inf,Inf];
         pts(i).vel=[0 0];
         remove_pts=[remove_pts, i];
         if plot_flag
@@ -271,7 +271,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% FUNCTIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function h=setup_plot(R,offset)
     h_p=figure(1);
-    h_p.Position=[1295 376 560 420];
+    %h_p.Position=[1295 376 560 420];
     x_pos=R*cos(linspace(-pi,pi));
     y_pos=R*sin(linspace(-pi,pi));
     plot(x_pos,y_pos,'k--');hold on
