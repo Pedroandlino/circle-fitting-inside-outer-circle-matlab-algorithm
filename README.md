@@ -13,7 +13,7 @@ Turn "final_plot_flag" on in order to only see the circles in their final positi
 
 Example images:
 
-<img align="center" ![alt text](https://github.com/Pedroandlino/circle-fitting-inside-outer-circle-matlab-algorithm/blob/master/img1.png)>
+<img align="center" src="https://github.com/Pedroandlino/circle-fitting-inside-outer-circle-matlab-algorithm/blob/master/img1.png">
 
 ![alt text](https://github.com/Pedroandlino/circle-fitting-inside-outer-circle-matlab-algorithm/blob/master/img2.png)
 
