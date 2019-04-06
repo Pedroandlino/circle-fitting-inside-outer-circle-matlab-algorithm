@@ -12,12 +12,14 @@ Turn "plot_flag" off to improve speed.
 Turn "final_plot_flag" on in order to only see the circles in their final positions.
 
 Example images:
+
 ![alt text](https://github.com/Pedroandlino/circle-fitting-inside-outer-circle-matlab-algorithm/blob/master/img1.png)
+
 ![alt text](https://github.com/Pedroandlino/circle-fitting-inside-outer-circle-matlab-algorithm/blob/master/img2.png)
 
 I accept feedback for improvements.
 
-# NOTE: in the code, the blue circles are refered to as points (i.e. pts)
+NOTE: in the code, the blue circles are refered to as points (i.e. pts)
 
 
 Thank you!
