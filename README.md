@@ -14,11 +14,11 @@ Turn "final_plot_flag" on in order to only see the circles in their final positi
 Example images:
 
 <p align="center">
-  <src=https://github.com/Pedroandlino/circle-fitting-inside-outer-circle-matlab-algorithm/blob/master/img1.png>
+  <img src=https://github.com/Pedroandlino/circle-fitting-inside-outer-circle-matlab-algorithm/blob/master/img1.png>
 </p>
 
 <p align="center">
-  <src="https://github.com/Pedroandlino/circle-fitting-inside-outer-circle-matlab-algorithm/blob/master/img2.png">
+  <img src="https://github.com/Pedroandlino/circle-fitting-inside-outer-circle-matlab-algorithm/blob/master/img2.png">
 </p>
 
 I accept feedback for improvements.
